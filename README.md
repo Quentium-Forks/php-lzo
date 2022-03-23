@@ -5,7 +5,7 @@ lzo compression for php
 
 To install:
 
-    $ sudo apt-get install php5-dev liblzo2-dev # or equivalent
+    $ sudo apt-get install php8.1-dev liblzo2-dev # or equivalent
     $ git clone https://github.com/adsr/php-lzo.git
     $ cd php-lzo
     $ phpize && ./configure && make
