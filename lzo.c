@@ -39,6 +39,14 @@
 #include <lzo/lzo1b.h>
 #include <lzo/lzo_asm.h>
 
+ZEND_BEGIN_ARG_INFO_EX(arginfo_lzo_compress, 0, 0, 1)
+    ZEND_ARG_INFO(0, data)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(arginfo_lzo_decompress, 0, 0, 1)
+    ZEND_ARG_INFO(0, data)
+ZEND_END_ARG_INFO()
+
 #if PHP_MAJOR_VERSION >= 7
     #define COMPAT_RETVAL_STRINGL(str, len, dup) \
         RETVAL_STRINGL(str, len)
@@ -67,8 +75,8 @@ static const int compress_database_len = sizeof(compress_database) / sizeof(comp
  * Every user visible function must have an entry in lzo_functions[].
  */
 const zend_function_entry lzo_functions[] = {
-    PHP_FE(lzo_compress, NULL)
-    PHP_FE(lzo_decompress, NULL)
+    PHP_FE(lzo_compress, arginfo_lzo_compress)
+    PHP_FE(lzo_decompress, arginfo_lzo_decompress)
     PHP_FE_END    /* Must be the last line in lzo_functions[] */
 };
 /* }}} */
