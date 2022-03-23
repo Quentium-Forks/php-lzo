@@ -43,7 +43,7 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_lzo_compress, 0, 0, 1)
     ZEND_ARG_INFO(0, data)
 ZEND_END_ARG_INFO()
 
-ZEND_BEGIN_ARG_INFO_EX(arginfo_lzo_decompress, 0, 0, 1)
+ZEND_BEGIN_ARG_INFO_EX(arginfo_lzo_uncompress, 0, 0, 1)
     ZEND_ARG_INFO(0, data)
 ZEND_END_ARG_INFO()
 
@@ -76,7 +76,7 @@ static const int compress_database_len = sizeof(compress_database) / sizeof(comp
  */
 const zend_function_entry lzo_functions[] = {
     PHP_FE(lzo_compress, arginfo_lzo_compress)
-    PHP_FE(lzo_decompress, arginfo_lzo_decompress)
+    PHP_FE(lzo_uncompress, arginfo_lzo_uncompress)
     PHP_FE_END    /* Must be the last line in lzo_functions[] */
 };
 /* }}} */
@@ -151,7 +151,7 @@ PHP_MINFO_FUNCTION(lzo)
 }
 /* }}} */
 
-/* {{{ Compress/decompress logic
+/* {{{ Compress/uncompress logic
  */
 static void php_lzo_do(INTERNAL_FUNCTION_PARAMETERS, int is_compress) {
     int len;
@@ -187,7 +187,7 @@ static void php_lzo_do(INTERNAL_FUNCTION_PARAMETERS, int is_compress) {
         workmem = (lzo_voidp)emalloc(compression->mem_compress);
     } else {
         out_len = in_len + in_len / 8 + 128 + 3; /* This formula is taken from doc/LZO.FAQ */
-        workmem = NULL; /* Decompression does not need workmem */
+        workmem = NULL; /* Uncompression does not need workmem */
     }
     out = (lzo_bytep)ecalloc(out_len + 1, sizeof(lzo_bytep));
     if (!out || (is_compress && !workmem)) {
@@ -201,10 +201,10 @@ static void php_lzo_do(INTERNAL_FUNCTION_PARAMETERS, int is_compress) {
     if (is_compress) {
         rc = compression->compress(in, in_len, out, &out_len, workmem);
     } else {
-        rc = compression->decompress(in, in_len, out, &out_len, NULL);
+        rc = compression->uncompress(in, in_len, out, &out_len, NULL);
     }
     if (rc != LZO_E_OK) {
-        php_error_docref(NULL, E_ERROR, (is_compress ? "compression failed" : "decompression failed"));
+        php_error_docref(NULL, E_ERROR, (is_compress ? "compression failed" : "uncompression failed"));
         efree(out);
         if (workmem) efree(workmem);
         RETURN_FALSE;
@@ -228,9 +228,9 @@ PHP_FUNCTION(lzo_compress)
     php_lzo_do(INTERNAL_FUNCTION_PARAM_PASSTHRU, 1);
 }
 
-/* {{{ proto string lzo_decompress(string data [, int algorithm])
-   Decompress a string */
-PHP_FUNCTION(lzo_decompress)
+/* {{{ proto string lzo_uncompress(string data [, int algorithm])
+   Uncompress a string */
+PHP_FUNCTION(lzo_uncompress)
 {
     php_lzo_do(INTERNAL_FUNCTION_PARAM_PASSTHRU, 0);
 }

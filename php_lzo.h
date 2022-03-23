@@ -36,7 +36,7 @@ extern zend_module_entry lzo_module_entry;
 #include "TSRM.h"
 #endif
 
-#define PHP_LZO_VERSION "0.1"
+#define PHP_LZO_VERSION "0.2"
 
 #include <lzo/lzoconf.h>
 #include <lzo/lzo1.h>
@@ -62,14 +62,14 @@ typedef struct
 {
     const char *            name;
     lzo_uint32              mem_compress;
-    lzo_uint32              mem_decompress;
+    lzo_uint32              mem_uncompress;
     lzo_compress_t          compress;
-    lzo_decompress_t        decompress;
+    lzo_decompress_t        uncompress;
 }
 compress_t;
 
 PHP_FUNCTION(lzo_compress);
-PHP_FUNCTION(lzo_decompress);
+PHP_FUNCTION(lzo_uncompress);
 
 #endif    /* PHP_LZO_H */
 

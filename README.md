@@ -19,12 +19,12 @@ To use:
 
 or:
 
-    $orig_data = lzo_decompress($previously_compressed_data);
+    $orig_data = lzo_uncompress($previously_compressed_data);
 
 The default compression algorithm is LZO1X-1, but you can also specify one:
 
     $data = lzo_compress($data, LZO1X_999);
-    $data = lzo_decompress($data, LZO1X_999);
+    $data = lzo_uncompress($data, LZO1X_999);
 
 See available compression algorithms in `db.h`.
 

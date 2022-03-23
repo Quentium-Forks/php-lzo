@@ -21,7 +21,7 @@ foreach (get_defined_constants() as $name => $alg) {
         continue;
     }
     $compressed_data = lzo_compress($data, $alg);
-    $orig_data = lzo_decompress($compressed_data, $alg);
+    $orig_data = lzo_uncompress($compressed_data, $alg);
     //$orig_data = 'x';
     printf($format, $name, ($data === $orig_data ? 'yes' : 'no'), round(strlen($compressed_data) / strlen($data), 2));
 }
