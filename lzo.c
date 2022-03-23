@@ -116,7 +116,6 @@ PHP_MINIT_FUNCTION(lzo)
             i,
             CONST_CS | CONST_PERSISTENT,
             module_number
-            TSRMLS_CC
         );
     }
 
@@ -159,7 +158,7 @@ static void php_lzo_do(INTERNAL_FUNCTION_PARAMETERS, int is_compress) {
     int rc;
 
     /** Parse params */
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|l", &data, &data_len, &algorithm) == FAILURE) {
+    if (zend_parse_parameters(ZEND_NUM_ARGS(), "s|l", &data, &data_len, &algorithm) == FAILURE) {
         return;
     }
 
@@ -167,7 +166,7 @@ static void php_lzo_do(INTERNAL_FUNCTION_PARAMETERS, int is_compress) {
     if (algorithm == -1) {
         algorithm = 0;
     } else if (algorithm < 0 || algorithm >= compress_database_len) {
-        php_error_docref(NULL TSRMLS_CC, E_WARNING, "algorithm %ld not recognized; using LZO1X-1", algorithm);
+        php_error_docref(NULL, E_WARNING, "algorithm %ld not recognized; using LZO1X-1", algorithm);
         algorithm = 0;
     }
     compression = &(compress_database[algorithm]);
@@ -184,7 +183,7 @@ static void php_lzo_do(INTERNAL_FUNCTION_PARAMETERS, int is_compress) {
     }
     out = (lzo_bytep)ecalloc(out_len + 1, sizeof(lzo_bytep));
     if (!out || (is_compress && !workmem)) {
-        php_error_docref(NULL TSRMLS_CC, E_ERROR, "out of memory");
+        php_error_docref(NULL, E_ERROR, "out of memory");
         if (out) efree(out);
         if (workmem) efree(workmem);
         RETURN_FALSE;
@@ -197,7 +196,7 @@ static void php_lzo_do(INTERNAL_FUNCTION_PARAMETERS, int is_compress) {
         rc = compression->decompress(in, in_len, out, &out_len, NULL);
     }
     if (rc != LZO_E_OK) {
-        php_error_docref(NULL TSRMLS_CC, E_ERROR, (is_compress ? "compression failed" : "decompression failed"));
+        php_error_docref(NULL, E_ERROR, (is_compress ? "compression failed" : "decompression failed"));
         efree(out);
         if (workmem) efree(workmem);
         RETURN_FALSE;
